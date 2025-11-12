@@ -21,14 +21,35 @@ final class App
 
     private static function routes()
     {
-        
+
+        $httpMethod = $_SERVER['REQUEST_METHOD'];
+        $uri = $_SERVER['REQUEST_URI'];
+        $base = "public";
+        $filePath = __DIR__ . '/' . $base . $uri;
+        if (file_exists($filePath) && is_file($filePath)) {
+            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+            $mimeTypes = [
+                'css'  => 'text/css',
+                'js'   => 'application/javascript',
+                'png'  => 'image/png',
+                'jpg'  => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'gif'  => 'image/gif',
+                'svg'  => 'image/svg+xml',
+                'woff' => 'font/woff',
+                'woff2' => 'font/woff2',
+                'ttf'  => 'font/ttf',
+                'html' => 'text/html',
+            ];
+
+            $mime = $mimeTypes[$ext] ?? 'application/octet-stream';
+            header("Content-Type: {$mime}; charset=UTF-8");
+            echo file_get_contents($filePath);
+            exit;
+        }
         $dispatcher = simpleDispatcher(function (RouteCollector $r) {
             require_once __DIR__ . '/routes/web.php';
         });
-        
-        $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
-
         // Strip query string (?foo=bar)
         if (false !== $pos = strpos($uri, '?')) {
             $uri = substr($uri, 0, $pos);
