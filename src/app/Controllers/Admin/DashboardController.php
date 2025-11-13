@@ -3,14 +3,15 @@
 namespace Store\App\Controllers\Admin;
 
 use Store\App\Controllers\Controller;
+use Store\Database\DB;
 
 class DashboardController extends Controller
 {
     public function show()
     {
-        $users = 1;
-        $orders = 1;
-        $products = 0;
+        $users = DB::make()->table('users')->count();
+        $orders = DB::make()->table('orders')->count();
+        $products = DB::make()->table('products')->count();
         $views = 0;
 
         return render('admin.dashboard', get_defined_vars());

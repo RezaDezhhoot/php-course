@@ -16,7 +16,8 @@ class DB
         $this->newConnection();
     }
 
-    public static function make() {
+    public static function make()
+    {
         return new static();
     }
 
@@ -45,7 +46,7 @@ class DB
         return $this;
     }
 
-    public function get()
+    private function prepareWhere(): array
     {
         $where = '';
         $values = [];
@@ -57,6 +58,25 @@ class DB
             }
         }
 
+        return [$where, $values];
+    }
+
+    public function count(): int
+    {
+        [$where, $values] = $this->prepareWhere();
+        $func = "COUNT(id)";
+        $sql = sprintf("SELECT $func FROM %s %s", $this->table, $where);
+        $statment = $this->connection->prepare($sql);
+        if ($statment->execute($values)) {
+            return $statment->fetch(PDO::FETCH_ASSOC)[$func];
+        } else {
+            throw new \Exception("Error while reading " . $this->table . " table");
+        }
+    }
+
+    public function get(): array
+    {
+        [$where, $values] = $this->prepareWhere();
         $sql = sprintf("SELECT * FROM %s %s", $this->table, $where);
         $statment = $this->connection->prepare($sql);
 

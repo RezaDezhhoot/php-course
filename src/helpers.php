@@ -11,14 +11,28 @@ function env($name, $default = ""): string|null
     return $default;
 }
 
+function isRoute($route)
+{
+    return $route === getUri();
+}
+
+function getUri()
+{
+    $uri = $_SERVER['REQUEST_URI'];
+    $p = "/^(\?)+[\w]=[\w]$/i";
+    $uri = preg_replace($p, "", $uri);
+
+    return $uri;
+}
+
 function config($path = '*')
 {
     if ($path !== "*") {
         $path = explode(".", $path);
         if (sizeof($path) == 1) {
-            return includeFiles(glob(sprintf("config/%s.php", $path[0])))[pathinfo($path[0], PATHINFO_FILENAME)];
+            return includeFiles(glob(sprintf(__DIR__ . "/config/%s.php", $path[0])))[pathinfo($path[0], PATHINFO_FILENAME)];
         } else if (sizeof($path) > 1) {
-            $target = includeFiles(glob(sprintf("config/%s.php", $path[0])));
+            $target = includeFiles(glob(sprintf(__DIR__ . "/config/%s.php", $path[0])));
             foreach ($path as  $value) {
                 $target = $target[$value];
             }
@@ -41,10 +55,15 @@ function includeFiles(array $files)
 
 function render($name, $data = [])
 {
+    renderFile($name, $data);
+    exit();
+}
+
+function renderFile($name, $data = [])
+{
     extract($data);
     $name = str_replace(".", "/", $name);
     require __DIR__ . '/views/' . $name . '.php';
-    exit();
 }
 
 

@@ -37,7 +37,6 @@ class AuthController extends Controller
             }
             header("Location:/login");
         }
-
         $user = DB::make()->table("users")->where("phone", "=", $_POST['phone'])->get();
         if (sizeof($user) === 1) {
             $user = $user[0];
