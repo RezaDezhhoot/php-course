@@ -14,6 +14,14 @@ $r->addRoute('GET', '/admin/products', [
     'handler' => [ProductController::class, 'list'],
     'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
 ]);
+$r->addRoute('GET', '/admin/products/create', [
+    'handler' => [ProductController::class, 'create'],
+    'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
+]);
+$r->addRoute('POST', '/admin/products/create', [
+    'handler' => [ProductController::class, 'store'],
+    'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
+]);
 $r->addRoute('GET', '/login', [AuthController::class, 'login']);
 $r->addRoute('POST', '/login', [AuthController::class, 'postLogin']);
 

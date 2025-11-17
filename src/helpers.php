@@ -87,3 +87,8 @@ function flash($key, $msg, $ttl = 15)
 {
     setcookie($key, $msg, time() + $ttl, '/');
 }
+
+function old($key, $msg)
+{
+    flash($key, $msg, 60);
+}
