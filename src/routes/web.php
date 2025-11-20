@@ -22,6 +22,21 @@ $r->addRoute('POST', '/admin/products/create', [
     'handler' => [ProductController::class, 'store'],
     'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
 ]);
+$r->addRoute('DELETE', '/admin/products/destroy/{id}', [
+    'handler' => [ProductController::class, 'destroy'],
+    'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
+]);
+
+$r->addRoute('GET', '/admin/products/edit/{id}', [
+    'handler' => [ProductController::class, 'edit'],
+    'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
+]);
+
+$r->addRoute('POST', '/admin/products/edit/{id}', [
+    'handler' => [ProductController::class, 'update'],
+    'middlwares' => [AuthMiddleware::class, IsAdminMiddleware::class],
+]);
+
 $r->addRoute('GET', '/login', [AuthController::class, 'login']);
 $r->addRoute('POST', '/login', [AuthController::class, 'postLogin']);
 

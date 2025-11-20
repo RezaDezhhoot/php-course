@@ -15,7 +15,7 @@
                  </a>
              </li>
 
-             <li class="sidebar-item <?php echo isRoute('/admin/products') ? 'active' : '' ?>">
+             <li class="sidebar-item <?php echo isRoute(['/admin/products','/admin/products/create','/admin/products/edit']) ? 'active' : '' ?>">
                  <a class="sidebar-link" href="/admin/products">
                      <i class="align-middle" data-feather="box"></i> <span class="align-middle">Products</span>
                  </a>

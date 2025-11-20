@@ -36,14 +36,14 @@
                                                 <td><span class="badge bg-<?php echo $item['status'] === 'published' ? 'success' : 'danger' ?>"><?php echo $item['status']; ?></span></td>
                                                 <td>
                                                     <?php if ($item['images']): ?>
-                                                        <?php foreach(json_decode($item['images']) as $img): ?>
+                                                        <?php foreach (json_decode($item['images']) as $img): ?>
                                                             <img src="<?php echo $img ?>" style="width: 50px;height:50px" alt="" srcset="">
                                                         <?php endforeach; ?>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td class="d-none d-md-table-cell">
-                                                    <a class="btn btn-outline-primary" href="">Edit <i class="align-middle" data-feather="edit"></i></a>
-                                                    <button class="btn btn-outline-danger">Delete <i class="align-middle" data-feather="trash"></i></button>
+                                                <td class="d-table-cell">
+                                                    <a class="btn btn-outline-primary" target="_blank" href="/admin/products/edit/<?php echo $item['id'] ?>">Edit <i class="align-middle" data-feather="edit"></i></a>
+                                                    <button onclick="deleteItem('<?php echo $item['id'] ?>')" class="btn btn-outline-danger">Delete <i class="align-middle" data-feather="trash"></i></button>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>
@@ -58,6 +58,26 @@
         </div>
     </div>
     <?php renderFile('includes.admin.foot') ?>
+    <script>
+        function deleteItem(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const res = await fetch('/admin/products/destroy/' + id, {
+                        method: "DELETE"
+                    });
+                    location.reload()
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

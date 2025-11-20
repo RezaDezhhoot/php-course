@@ -87,6 +87,19 @@ class DB
         }
     }
 
+    public function first(): array
+    {
+        [$where, $values] = $this->prepareWhere();
+        $sql = sprintf("SELECT * FROM %s %s ORDER BY id DESC", $this->table, $where);
+        $statment = $this->connection->prepare($sql);
+
+        if ($statment->execute($values)) {
+            return $statment->fetch(PDO::FETCH_ASSOC);
+        } else {
+            throw new \Exception("Error while reading " . $this->table . " table");
+        }
+    }
+
     public function create($data)
     {
         $columns = array_keys($data);
@@ -97,6 +110,35 @@ class DB
         $sql = sprintf("INSERT INTO %s (%s) VALUE (%s)", $this->table, implode(',', $columns), implode(',', $marks));
         $statment = $this->connection->prepare($sql);
         if ($res = $statment->execute(array_values($data))) {
+            return $res;
+        } else {
+            throw new \Exception("Error while reading " . $this->table . " table");
+        }
+    }
+
+    public function delete()
+    {
+        [$where, $values] = $this->prepareWhere();
+        $sql = sprintf("DELETE FROM %s %s", $this->table, $where);
+        $statment = $this->connection->prepare($sql);
+
+        if ($res = $statment->execute($values)) {
+            return $res;
+        } else {
+            throw new \Exception("Error while reading " . $this->table . " table");
+        }
+    }
+
+    public function update($data)
+    {
+        [$where, $values] = $this->prepareWhere();
+        $marks = [];
+        foreach ($data as $k => $val) {
+            $marks[] = "$k = ?";
+        }
+        $sql = sprintf("UPDATE %s SET %s %s", $this->table, implode(',', $marks), $where);
+        $statment = $this->connection->prepare($sql);
+        if ($res = $statment->execute(array_merge(array_values($data), $values))) {
             return $res;
         } else {
             throw new \Exception("Error while reading " . $this->table . " table");
